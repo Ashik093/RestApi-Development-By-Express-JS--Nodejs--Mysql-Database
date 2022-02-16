@@ -9,6 +9,7 @@ var auth = require('./../middleware/auth')
 router.post('/Register', register.register)
 router.post('/Login', login.login)
 
+router.get('/Me', auth.auth, login.me);
 router.get('/User/GetAll', auth.auth, user.getAllUser);
 router.post('/User/Store', auth.auth, user.storeUser)
 router.put('/User/Update/:id', auth.auth, user.updateUser)
