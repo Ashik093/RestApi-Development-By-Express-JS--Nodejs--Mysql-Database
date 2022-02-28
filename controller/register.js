@@ -1,36 +1,25 @@
-var connection = require('./../services/connection')
+const User = require('./../models/user')
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 exports.register = function(req, res, next) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    let sql = 'INSERT INTO users (name,email,password) VALUES(?)';
-    let values = [
-        req.body.name,
-        req.body.email,
-        bcrypt.hashSync(req.body.password, salt)
-    ];
-    connection.query(sql, [values], function(err, rows, fields) {
-        if (err) throw err
-        const token = jwt.sign({ user_id: rows.insertId, email: req.body.email },
+    const user = User.create({ name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, salt) }).then((user) => {
+        const token = jwt.sign({ user_id: user.id, email: user.email },
             process.env.SECRETE_KEY, {
                 expiresIn: "2h",
             }
         );
-        let dataSql = 'SELECT * FROM users WHERE id=?';
-        let id = rows.insertId;
-        connection.query(dataSql, id, function(err, rows, fields) {
-            if (err) throw err
-
-            res.json({
-                status: 200,
-                message: "User Added Successfully",
-                token: token,
-                data: rows[0]
-            })
+        res.json({
+            status: 200,
+            message: "User Added Successfully",
+            token: token,
+            data: user
         })
-
-    })
-
+    }).catch((err) => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving."
+        });
+    });
 }
