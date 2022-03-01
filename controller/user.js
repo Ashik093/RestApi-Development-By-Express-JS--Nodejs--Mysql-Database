@@ -38,31 +38,36 @@ exports.storeUser = function(req, res, next) {
     });
 }
 exports.updateUser = function(req, res, next) {
-
-    let sql = "UPDATE users SET name=?,email=? WHERE id=?";
-    let values = [
-        req.body.name,
-        req.body.email,
-        req.params.id
-    ]
-    connection.query(sql, values, function(err, rows, fields) {
-        if (err) throw err
+    const user = User.update({ name: req.body.name }, {
+        where: {
+            id: req.params.id
+        }
+    }).then((data) => {
         res.json({
             status: 200,
-            message: "Updated SuccessFully"
+            message: "Updated SuccessFully",
+            data: data
         })
+    }).catch((err) => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving."
+        });
     })
 }
 exports.deleteUser = function(req, res, next) {
-    let sql = "DELETE FROM users WHERE id=?";
-    let values = [
-        req.params.id
-    ]
-    connection.query(sql, values, function(err, rows, fields) {
-        if (err) throw err
+    const user = User.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then((data) => {
         res.json({
             status: 200,
             message: "Deleted SuccessFully"
         })
+    }).catch((err) => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving."
+        });
     })
+
 }
