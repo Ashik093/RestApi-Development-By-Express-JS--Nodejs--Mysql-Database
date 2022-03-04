@@ -1,17 +1,13 @@
-var connection = require('../services/connection');
-const Task = require('./../models/task')
-const User = require('./../models/user')
-
-
+const db = require('./../models/index')
 exports.index = function(req, res, next) {
     let paginate_limit = 2;
     let paginate_offset = (Number(req.query.page) - 1) * paginate_limit;
-    const task = Task.findAll({
+    const task = db.Task.findAll({
         limit: paginate_limit,
         offset: paginate_offset,
         include: [
-            { model: User, as: "User" },
-            { model: User, as: "createdBy" },
+            { model: db.User, as: "User" },
+            { model: db.User, as: "createdBy" },
         ]
     }).then((data) => {
         if (data.length > 0) {
@@ -41,7 +37,7 @@ exports.index = function(req, res, next) {
 
 }
 exports.store = function(req, res, next) {
-    const task = Task.create({
+    const task = db.Task.create({
         userId: req.body.userId,
         name: req.body.name,
         description: req.body.description,

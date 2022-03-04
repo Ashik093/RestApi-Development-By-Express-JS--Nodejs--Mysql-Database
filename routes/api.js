@@ -4,7 +4,8 @@ var user = require('./../controller/user')
 var register = require('./../controller/register')
 var login = require('./../controller/login')
 var auth = require('./../middleware/auth')
-var task = require('./../controller/task')
+var task = require('./../controller/task');
+const timesheet = require('./../controller/timesheet');
 
 /* GET home page. */
 router.post('/Register', register.register)
@@ -18,5 +19,7 @@ router.delete('/User/Delete/:id', auth.auth, user.deleteUser)
 
 router.post('/Task/Store', auth.auth, task.store)
 router.get('/Task/GetAll', auth.auth, task.index)
+
+router.get('/Timesheet/GetAll', auth.auth, timesheet.index)
 
 module.exports = router;
