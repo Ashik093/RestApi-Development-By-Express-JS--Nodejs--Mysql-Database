@@ -1,11 +1,11 @@
-const User = require('./../models/user')
+const db = require('./../models/index')
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 exports.register = function(req, res, next) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    const user = User.create({ name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, salt) }).then((user) => {
+    const user = db.User.create({ name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, salt) }).then((user) => {
         const token = jwt.sign({ user_id: user.id, email: user.email },
             process.env.SECRETE_KEY, {
                 expiresIn: "2h",

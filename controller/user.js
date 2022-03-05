@@ -1,8 +1,8 @@
-const User = require('./../models/user')
+const db = require('./../models/index')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 exports.getAllUser = function(req, res, next) {
-    const users = User.findAll().then(data => {
+    const users = db.User.findAll().then(data => {
             if (data.length > 0) {
                 res.json({
                     status: 200,
@@ -25,7 +25,7 @@ exports.getAllUser = function(req, res, next) {
 }
 exports.storeUser = function(req, res, next) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    const user = User.create({ name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, salt) }).then((user) => {
+    const user = db.User.create({ name: req.body.name, email: req.body.email, password: bcrypt.hashSync(req.body.password, salt) }).then((user) => {
         res.json({
             status: 200,
             message: "User Added Successfully",
@@ -38,7 +38,7 @@ exports.storeUser = function(req, res, next) {
     });
 }
 exports.updateUser = function(req, res, next) {
-    const user = User.update({ name: req.body.name }, {
+    const user = db.User.update({ name: req.body.name }, {
         where: {
             id: req.params.id
         }
@@ -55,7 +55,7 @@ exports.updateUser = function(req, res, next) {
     })
 }
 exports.deleteUser = function(req, res, next) {
-    const user = User.destroy({
+    const user = db.User.destroy({
         where: {
             id: req.params.id
         }

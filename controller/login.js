@@ -1,9 +1,9 @@
+const db = require('./../models/index')
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const User = require('./../models/user')
 
 exports.login = function(req, res, next) {
-    const users = User.findAll({
+    const users = db.User.findAll({
             where: {
                 email: req.body.email
             }
@@ -42,7 +42,7 @@ exports.login = function(req, res, next) {
         });
 }
 exports.me = function(req, res, next) {
-    const users = User.findAll({
+    const users = db.User.findAll({
             where: {
                 id: auth_id
             }
