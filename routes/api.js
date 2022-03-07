@@ -7,6 +7,7 @@ var auth = require('./../middleware/auth')
 var task = require('./../controller/task');
 const timesheet = require('./../controller/timesheet');
 const attendance = require('./../controller/attendance');
+const mail = require('./../controller/testmail');
 
 /* GET home page. */
 router.post('/Register', register.register)
@@ -31,5 +32,7 @@ router.get('/Attendance/GetAll', auth.auth, attendance.index)
 router.post('/Attendance/Store', auth.auth, attendance.store)
 router.get('/Attendance/Show/:id', auth.auth, attendance.show)
 router.delete('/Attendance/Delete/:id', auth.auth, attendance.delete)
+
+router.post('/SendMail', auth.auth, mail.sendMail)
 
 module.exports = router;
